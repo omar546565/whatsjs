@@ -162,6 +162,9 @@ const sendMessage = async (userId, number, message) => {
         throw new Error(`WhatsApp is still initializing. Please wait a moment and try again.`);
     }
 
+    // Remove leading 00 or +
+    number = number.replace(/^(00|\+)/, '');
+
     const formattedNumber = number.includes('@c.us') ? number : `${number}@c.us`;
     console.log(`Sending message to ${formattedNumber} for user ${userId}`);
     return await client.sendMessage(formattedNumber, message);
