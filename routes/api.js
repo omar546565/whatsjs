@@ -46,8 +46,9 @@ router.post('/disconnect', authenticateToken, async (req, res) => {
 // Messaging API (The one requested by user)
 // POST /api/sent/:id
 router.post('/sent/:id', async (req, res) => {
-    const { user_id, app_secret, number, message } = req.body;
+    const { user_id, app_secret, message } = req.body;
     const userIdFromParam = req.params.id;
+    const number = (req.body.number || '').replace(/^(00|\+)/, '');
 
     // Validate user and secret
     const user = await Database.getUserById(user_id);
