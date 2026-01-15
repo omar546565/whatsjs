@@ -4,7 +4,7 @@ services:
   whatsapp-api:
     build: .
     ports:
-      - "3011:3000"
+      - "3011:3011"
     volumes:
       - ./.wwebjs_auth:/app/.wwebjs_auth
       - ./data:/app/data
