@@ -16,7 +16,7 @@
     "qrcode": "^1.5.3",
     "socket.io": "^4.7.2",
     "sqlite3": "^5.1.6",
-    "whatsapp-web.js": "git+https://github.com/pedroslopez/whatsapp-web.js.git"
+    "whatsapp-web.js": "v1.34.5-alpha.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

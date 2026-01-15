@@ -63,6 +63,26 @@ const initClient = async (userId, io) => {
 
     client.on('ready', async () => {
         console.log(`Client ready for user ${userId}`);
+
+        // Patch sendSeen to use markSeen instead (fixes markedUnread error)
+        try {
+            await client.pupPage?.evaluate(() => {
+                window.WWebJS.sendSeen = async (chatId) => {
+                    const chat = await window.WWebJS.getChat(chatId, { getAsModel: false });
+                    if (chat) {
+                        window.Store.WAWebStreamModel.Stream.markAvailable();
+                        await window.Store.SendSeen.markSeen(chat);
+                        window.Store.WAWebStreamModel.Stream.markUnavailable();
+                        return true;
+                    }
+                    return false;
+                };
+            });
+            console.log(`[Runtime Patch] Applied sendSeen fix for user ${userId}`);
+        } catch (patchErr) {
+            console.error(`[Runtime Patch Error] Failed to apply sendSeen fix for user ${userId}:`, patchErr);
+        }
+
         client.isReady = true;
         if (io) io.emit(`ready-${userId}`, 'Connected');
         await Database.updateSessionStatus(userId, 'connected');
