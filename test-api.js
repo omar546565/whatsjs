@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function testSendMessage() {
-    const url = "http://localhost:3000/api/sent/1";
+    const url = "http://localhost:3011/api/sent/1";
     const payload = {
         user_id: "1",
         app_secret: "YOUR_APP_SECRET_HERE", // Replace with secret from dashboard

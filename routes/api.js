@@ -3,7 +3,8 @@ const router = express.Router();
 const Database = require('../database');
 const WhatsAppManager = require('../whatsapp-manager');
 const jwt = require('jsonwebtoken');
-
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
 // Middleware to verify JWT
@@ -45,7 +46,9 @@ router.post('/disconnect', authenticateToken, async (req, res) => {
 
 // Messaging API (The one requested by user)
 // POST /api/sent/:id
-router.post('/sent/:id', async (req, res) => {
+// Messaging API (The one requested by user)
+// POST /api/sent/:id
+router.post('/sent/:id', upload.single('file'), async (req, res) => {
     const { user_id, app_secret, message } = req.body;
     const userIdFromParam = req.params.id;
     const number = (req.body.number || '').replace(/^(00|\+)/, '');
@@ -57,7 +60,11 @@ router.post('/sent/:id', async (req, res) => {
     }
 
     try {
-        await WhatsAppManager.sendMessage(user_id, number, message);
+        if (req.file) {
+            await WhatsAppManager.sendMessageMedia(user_id, number, message, req.file);
+        } else {
+            await WhatsAppManager.sendMessage(user_id, number, message);
+        }
         res.json({ success: true, message: 'Message sent' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });

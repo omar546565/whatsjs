@@ -1,4 +1,4 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 const Database = require('./database');
 const path = require('path');
@@ -170,6 +170,37 @@ const sendMessage = async (userId, number, message) => {
     return await client.sendMessage(formattedNumber, message);
 };
 
+const sendMessageMedia = async (userId, number, message, file) => {
+    let client = clients[userId];
+
+    if (!client) {
+        console.log(`Client ${userId} not in memory, attempting to initialize...`);
+        client = await initClient(userId);
+    }
+
+    // Wait for client to be ready (max 60 seconds)
+    let attempts = 0;
+    while (!client.isReady && attempts < 60) {
+        if (attempts % 5 === 0) console.log(`Waiting for user ${userId} to be ready... (${attempts}s)`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        attempts++;
+    }
+
+    if (!client.isReady) {
+        throw new Error(`WhatsApp is still initializing. Please wait a moment and try again.`);
+    }
+
+    // Remove leading 00 or +
+    number = number.replace(/^(00|\+)/, '');
+
+    const formattedNumber = number.includes('@c.us') ? number : `${number}@c.us`;
+
+    const media = new MessageMedia(file.mimetype, file.buffer.toString('base64'), file.originalname);
+
+    console.log(`Sending media message to ${formattedNumber} for user ${userId}`);
+    return await client.sendMessage(formattedNumber, media, { caption: message });
+};
+
 const disconnectClient = async (userId) => {
     const client = clients[userId];
     if (client) {
@@ -203,6 +234,7 @@ module.exports = {
     initClient,
     loadAllSessions,
     sendMessage,
+    sendMessageMedia,
     disconnectClient,
     getClient: (userId) => clients[userId]
 };
