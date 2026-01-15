@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp API Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Login Section -->
+        <div id="login-section" class="card">
+            <h1 id="form-title">WhatsApp API</h1>
+            <p id="form-desc">Login to manage your WhatsApp session</p>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" id="submit-btn">Login</button>
+            </form>
+            <p id="login-error" class="error"></p>
+        </div>
+
+        <!-- Dashboard (Hidden by default) -->
+        <div id="dashboard" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="welcome-msg">Welcome</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button id="manage-users-btn" class="hidden" onclick="window.location.href='/users.html'"
+                        style="background-color: #2a3942; color: #00a884; width: auto; padding: 10px 20px;">Manage
+                        Users</button>
+                    <button id="logout-wa-btn" class="hidden"
+                        style="background-color: #ef5350; width: auto; padding: 10px 20px;">Logout WhatsApp</button>
+                    <button id="logout-btn" style="background-color: #2a3942; width: auto; padding: 10px 20px;">Sign
+                        Out</button>
+                </div>
+            </div>
+
+            <div id="user-info">
+                <p><strong>User ID:</strong> <span id="user-id-display"></span></p>
+                <p><strong>App Secret:</strong> <span id="app-secret-display"></span></p>
+                <p><strong>Endpoint:</strong> <code>POST /api/sent/<span id="user-id-param"></span></code></p>
+            </div>
+
+            <div class="whatsapp-status">
+                <h3>WhatsApp Connection</h3>
+                <div id="status-badge" class="badge disconnected">Disconnected</div>
+                <div class="btn-group">
+                    <button id="init-btn">Connect WhatsApp</button>
+                    <button id="disconnect-btn" class="danger hidden">Disconnect WhatsApp</button>
+                </div>
+                <div id="qr-container" class="hidden">
+                    <p>Scan this QR code with WhatsApp:</p>
+                    <img id="qr-code" src="" alt="QR Code">
+                </div>
+            </div>
+
+            <div id="test-api-section" class="api-info hidden">
+                <h3>API Playground (Test)</h3>
+                <form id="test-msg-form">
+                    <input type="text" id="test-number" placeholder="Phone Number (e.g. 9050000000)" required>
+                    <textarea id="test-message" placeholder="Message content" required
+                        style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; background: #111b21; color: white; border: 1px solid #2a3942; margin-bottom: 10px; box-sizing: border-box;"></textarea>
+                    <button type="submit" id="send-test-btn">Send Test Message</button>
+                </form>
+                <p id="test-result" class="error" style="color: var(--primary);"></p>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

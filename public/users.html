@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - WhatsApp API</title>
+    <style>
+        :root {
+            --bg-color: #111b21;
+            --card-bg: #202c33;
+            --text-primary: #e9edef;
+            --text-secondary: #8696a0;
+            --accent: #00a884;
+            --accent-hover: #008f6f;
+            --danger: #ef5350;
+            --border: #2a3942;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: #2a3942;
+            color: var(--text-primary);
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--accent);
+            color: #111b21;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 168, 132, 0.1);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .add-user-section {
+            background-color: #2a3942;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .add-user-section h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .mono {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background-color: rgba(0, 168, 132, 0.2);
+            color: var(--accent);
+        }
+
+        .role-user {
+            background-color: rgba(134, 150, 160, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-row button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>User Management</h2>
+            <button onclick="window.location.href='/'" class="btn-secondary">Back to Dashboard</button>
+        </div>
+
+        <div class="add-user-section">
+            <h4>Add New User</h4>
+            <form id="add-user-form">
+                <div class="form-row">
+                    <div style="flex: 1;">
+                        <input type="text" id="new-username" placeholder="Username" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <input type="password" id="new-password" placeholder="Password" required>
+                    </div>
+                    <button type="submit">Add User</button>
+                </div>
+            </form>
+        </div>
+
+        <table id="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>App Secret</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="users-list"></tbody>
+        </table>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit User</h3>
+            </div>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="edit-username" disabled style="opacity: 0.7; cursor: not-allowed;">
+                </div>
+
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="edit-password" placeholder="Leave empty to keep current">
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="edit-role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-edit-btn" class="btn-secondary">Cancel</button>
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="users.js"></script>
+</body>
+
+</html>

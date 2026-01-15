@@ -1,0 +1,152 @@
+:root {
+    --primary: #25d366;
+    --primary-dark: #128c7e;
+    --bg: #0b141a;
+    --card-bg: #111b21;
+    --text: #e9edef;
+    --text-muted: #8696a0;
+    --error: #f15c6d;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+p {
+    color: var(--text-muted);
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #2a3942;
+    background-color: #2a3942;
+    color: white;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+}
+
+.hidden {
+    display: none;
+}
+
+.error {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#logout-btn {
+    width: auto;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+.api-info {
+    text-align: left;
+    background-color: #202c33;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.api-info code {
+    background-color: #111b21;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--primary);
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.badge.disconnected {
+    background-color: #3b4a54;
+}
+
+.badge.connected {
+    background-color: var(--primary);
+}
+
+.badge.qr_ready {
+    background-color: #e9edef;
+    color: black;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+button.danger {
+    background-color: var(--error);
+}
+
+button.danger:hover {
+    background-color: #d32f2f;
+}
+
+#qr-code {
+    width: 250px;
+    height: 250px;
+    margin-top: 15px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}

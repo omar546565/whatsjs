@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  whatsapp-api:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.wwebjs_auth:/app/.wwebjs_auth
+      - ./data:/app/data
+    environment:
+      - PORT=3000
+      - JWT_SECRET=8asfasf87asf7656asd
+    restart: always
